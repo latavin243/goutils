@@ -6,7 +6,7 @@ Golang toolbox
 
 - [x] set - a set implementation with generics
 - [x] strcase - convert between camelCase, snake_case, TitleCase, etc
-- [ ] funcwrap - wrap a func with additional functions
+- [x] fnwrap - wrap a func with additional functions
 - [ ] iterop - operation funcs for iterables
 - [ ] number - number conversion, etc
 
