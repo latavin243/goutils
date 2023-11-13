@@ -12,6 +12,6 @@ Golang toolbox
 
 ## utils based on other packages
 
-- [ ] hashutil - hash functions and examples, e.g. md5, murmurhash3, etc
+- [x] hashutil - hash functions and examples, e.g. md5, murmur3, etc
 - [ ] reflectutil - functions based on golang reflect
 - [ ] requtil - http request utils
