@@ -13,10 +13,10 @@ Golang toolbox
 ## utils based on other packages
 
 - [x] hashutil - hash functions and examples, e.g. md5, murmur3, etc
-- [ ] reflectutil - functions based on golang reflect
+- [x] reflectutil - functions based on golang reflect
 - [ ] requtil - http request utils
 
 ## todo
 
-- [ ] reflectutil add tag collector
+- [x] reflectutil add tag collector
 - [ ] reflectutil struct fold support more types: number, string, bool, slice, map, etc
