@@ -4,9 +4,11 @@ go 1.21.4
 
 require (
 	github.com/avast/retry-go v3.0.0+incompatible
+	github.com/panjf2000/ants/v2 v2.8.2
 	github.com/stretchr/testify v1.8.4
 	github.com/twmb/murmur3 v1.1.8
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
+	golang.org/x/sync v0.5.0
 	golang.org/x/text v0.14.0
 )
 

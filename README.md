@@ -14,6 +14,7 @@ Golang toolbox
 
 - [x] hashutil - hash functions and examples, e.g. md5, murmur3, etc
 - [x] reflectutil - functions based on golang reflect
+- [x] routinegroup - goroutine group
 - [ ] requtil - http request utils
 
 ## todo
