@@ -9,6 +9,7 @@ Golang toolbox
 - [x] fnwrap - wrap a func with additional functions
 - [x] iterop - operation funcs for iterables
 - [x] number - number conversion, etc
+- [x] roundrobin - round-robin balancing
 
 ## utils based on other packages
 
