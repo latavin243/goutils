@@ -8,7 +8,7 @@ Golang toolbox
 - [x] strcase - convert between camelCase, snake_case, TitleCase, etc
 - [x] fnwrap - wrap a func with additional functions
 - [x] iterop - operation funcs for iterables
-- [ ] number - number conversion, etc
+- [x] number - number conversion, etc
 
 ## utils based on other packages
 
