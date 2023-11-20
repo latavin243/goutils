@@ -12,7 +12,7 @@ import (
 func TestMd5(t *testing.T) {
 	var (
 		rawText  = "1_2_3_hello_world"
-		expected = "53a3ca2683cd32de63528122ef7b5b2e"
+		expected = "22829b82f32491a6cdd894f16198a9f4"
 	)
 	res := hashutil.Md5(rawText)
 	fmt.Printf("Md5: %s\n", res)

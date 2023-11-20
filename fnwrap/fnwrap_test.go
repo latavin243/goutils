@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/avast/retry-go"
+
 	"github.com/latavin243/goutils/fnwrap"
 )
 
@@ -40,17 +42,15 @@ func TestWithRetry(t *testing.T) {
 	fmt.Printf("=== [%s] start ===\n", testName)
 	defer fmt.Printf("=== [%s] finished ===\n", testName)
 
-	retrySettings := &fnwrap.RetrySettings{
-		Attempts: 3,
-		Delay:    time.Second,
-		OnRetryCallback: func(n uint, err error) {
-			fmt.Printf("retry failed, attempt=%d, err=%s\n", n, err)
-		},
+	retryOpts := []retry.Option{
+		retry.Attempts(3),
+		retry.Delay(time.Second),
+		retry.OnRetry(func(n uint, err error) { fmt.Printf("retry failed, attempt=%d, err=%s\n", n, err) }),
 	}
 	f := func() error {
 		return fmt.Errorf("expected error")
 	}
-	fnwrap.New(f).WithRetry(retrySettings).Do()
+	fnwrap.New(f).WithRetry(retryOpts...).Do()
 }
 
 func TestChainWrapper(t *testing.T) {
@@ -62,12 +62,10 @@ func TestChainWrapper(t *testing.T) {
 		time.Sleep(500 * time.Millisecond)
 		panic("panicError")
 	}
-	retrySettings := &fnwrap.RetrySettings{
-		Attempts: 3,
-		Delay:    time.Second,
-		OnRetryCallback: func(n uint, err error) {
-			fmt.Printf("retry failed, attempt=%d, err=%s\n", n, err)
-		},
+	retryOpts := []retry.Option{
+		retry.Attempts(3),
+		retry.Delay(time.Second),
+		retry.OnRetry(func(n uint, err error) { fmt.Printf("retry failed, attempt=%d, err=%s\n", n, err) }),
 	}
 	timeConsumptionCallback := func(timeConsumption time.Duration, _ error) {
 		fmt.Printf("function time consumption=%fs\n", timeConsumption.Seconds())
@@ -76,7 +74,7 @@ func TestChainWrapper(t *testing.T) {
 	err := fnwrap.New(f).
 		WithPanicRecovery().
 		WithTimerCallback(timeConsumptionCallback).
-		WithRetry(retrySettings).
+		WithRetry(retryOpts...).
 		Do()
 	fmt.Printf("wrapper chain with error, err=%s\n", err)
 }

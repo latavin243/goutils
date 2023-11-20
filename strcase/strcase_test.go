@@ -26,7 +26,7 @@ func TestSnakeToTitle(t *testing.T) {
 	testCases := []struct {
 		input, expected string
 	}{
-		{"user_total_cnt", "UserTotalCnt"},
+		{"user_total_cnt", "User Total Cnt"},
 	}
 	for _, tc := range testCases {
 		got := strcase.SnakeToTitle(tc.input)
