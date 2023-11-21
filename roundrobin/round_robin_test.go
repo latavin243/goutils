@@ -61,13 +61,7 @@ func TestRoundRobin(t *testing.T) {
 
 		gots := make([]*resource, 0, len(test.want))
 		for j := 0; j < len(test.want); j++ {
-			next, err := rr.Next()
-			if test.iserr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
-			gots = append(gots, next)
+			gots = append(gots, rr.Next())
 		}
 
 		if got, want := gots, test.want; !reflect.DeepEqual(got, want) {
