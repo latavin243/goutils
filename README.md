@@ -1,6 +1,12 @@
 # goutils
 
-Golang toolbox
+This projects provides many Golang tools for reference.  
+Most packages supports generics, which needs Golang version >= 1.18.  
+To use tools in this project, just `go get` the project and import the packages:
+
+```bash
+go get github.com/latavin243/goutils
+```
 
 ## utils without dependency
 
@@ -15,10 +21,9 @@ Golang toolbox
 
 - [x] hashutil - hash functions and examples, e.g. md5, murmur3, etc
 - [x] reflectutil - functions based on golang reflect
-- [x] routinegroup - goroutine group
+- [x] routinegroup - goroutine group, depends on ants, errgroup, etc
 - [ ] requtil - http request utils
 
 ## todo
 
-- [x] reflectutil add tag collector
 - [ ] reflectutil struct fold support more types: number, string, bool, slice, map, etc
