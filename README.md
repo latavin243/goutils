@@ -22,9 +22,9 @@ go get github.com/latavin243/goutils
 - [x] hashutil - hash functions and examples, e.g. md5, murmur3, etc
 - [x] reflectutil - functions based on golang reflect
 - [x] routinegroup - goroutine group, depends on ants, errgroup, etc
+- [x] filereader - read file (e.g. config) from json, yaml, toml, etc
 - [ ] requtil - http request utils
 - [ ] timeutil - functions based on golang time package
-- [ ] filereader - read file (e.g. config) from json, yaml, toml, etc
 
 ## todo
 
