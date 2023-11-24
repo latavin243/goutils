@@ -23,8 +23,8 @@ go get github.com/latavin243/goutils
 - [x] reflectutil - functions based on golang reflect
 - [x] routinegroup - goroutine group, depends on ants, errgroup, etc
 - [x] filereader - read file (e.g. config) from json, yaml, toml, etc
+- [x] timeutil - functions based on golang time package
 - [ ] requtil - http request utils
-- [ ] timeutil - functions based on golang time package
 
 ## todo
 
