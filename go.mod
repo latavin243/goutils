@@ -16,9 +16,13 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-resty/resty/v2 v2.10.0 // indirect
 	github.com/leekchan/accounting v1.0.0 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/time v0.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	moul.io/http2curl v1.0.0 // indirect
 )
