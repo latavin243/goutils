@@ -25,6 +25,7 @@ go get github.com/latavin243/goutils
 - [x] filereader - read file (e.g. config) from json, yaml, toml, etc
 - [x] timeutil - functions based on golang time package
 - [x] requtil - http request utils
+- [x] sampling - a little wrap of downsampling package
 
 ## todo
 
