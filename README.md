@@ -16,6 +16,7 @@ go get github.com/latavin243/goutils
 - [x] iterop - operation funcs for iterables
 - [x] number - number conversion, etc
 - [x] roundrobin - round-robin balancing
+- [ ] ringbuffer - ring buffer with generics
 
 ## utils based on other packages
 
