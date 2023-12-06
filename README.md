@@ -13,7 +13,7 @@ go get github.com/latavin243/goutils
 - [x] set - a set implementation with generics
 - [x] strcase - convert between camelCase, snake_case, TitleCase, etc
 - [x] fnwrap - wrap a func with additional functions
-- [x] iterop - operation funcs for iterables
+- [x] iterop - operation funcs for iterables, e.g. map, flatmap, etc
 - [x] number - number conversion, etc
 - [x] roundrobin - round-robin balancing
 - [ ] ringbuffer - ring buffer with generics

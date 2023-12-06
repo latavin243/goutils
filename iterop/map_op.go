@@ -4,6 +4,7 @@ import "sort"
 
 type SortFn[T any] func(lhs, rhs T) bool
 
+// MapValues takes the values of the map and sort the result (if sortFn is passed)
 func MapValues[K comparable, V any](m map[K]V, sortFn SortFn[V]) []V {
 	if len(m) == 0 {
 		return make([]V, 0)
@@ -20,6 +21,7 @@ func MapValues[K comparable, V any](m map[K]V, sortFn SortFn[V]) []V {
 	return outputs
 }
 
+// MapKeys takes the keys of the map and sort the result (if sortFn is passed)
 func MapKeys[K comparable, V any](m map[K]V, sortFn SortFn[K]) []K {
 	if len(m) == 0 {
 		return make([]K, 0)
