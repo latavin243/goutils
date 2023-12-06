@@ -17,6 +17,7 @@ go get github.com/latavin243/goutils
 - [x] number - number conversion, etc
 - [x] roundrobin - round-robin balancing
 - [ ] ringbuffer - ring buffer with generics
+- [x] stopwatch - a stopwatch to get time duration elapsed
 
 ## utils based on other packages
 
