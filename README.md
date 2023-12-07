@@ -16,8 +16,10 @@ go get github.com/latavin243/goutils
 - [x] iterop - operation funcs for iterables, e.g. map, flatmap, etc
 - [x] number - number conversion, etc
 - [x] roundrobin - round-robin balancing
-- [ ] ringbuffer - ring buffer with generics
 - [x] stopwatch - a stopwatch to get time duration elapsed
+- [ ] ringbuffer - ring buffer with generics
+- [ ] ringhash - ring hash for consistent hashing
+- [ ] bus - message bus for pub/sub, producer/consumer
 
 ## utils based on other packages
 
@@ -28,6 +30,8 @@ go get github.com/latavin243/goutils
 - [x] timeutil - functions based on golang time package
 - [x] requtil - http request utils
 - [x] sampling - a little wrap of downsampling package
+- [ ] fileutil - file tools, e.g. absolute path, size, md5, etc
+- [ ] excelutil - excel functions in practice based on qax-os/excelize
 
 ## todo
 
