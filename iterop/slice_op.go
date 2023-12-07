@@ -55,17 +55,17 @@ func SliceReduce[T, R any](inputs []T, init R, reduceFn func(R, T) R) R {
 	return output
 }
 
-// SliceChunk splits the rawSlice into batches, each batch has batchSize elements
+// SliceChunk splits the inputs into batches, each batch has batchSize elements
 // e.g. SliceChunk([1,2,3,4,5,6,7,8], 3) => [[1,2,3], [4,5,6], [7,8]]
-func SliceChunk[T any](rawSlice []T, batchSize int) (batches [][]T) {
+func SliceChunk[T any](inputs []T, batchSize int) (batches [][]T) {
 	batchSize = max(batchSize, minBatchSize)
 
-	rawLen := len(rawSlice)
+	rawLen := len(inputs)
 	if rawLen <= batchSize {
-		return [][]T{rawSlice}
+		return [][]T{inputs}
 	}
 	curBatch := make([]T, 0, batchSize)
-	for _, item := range rawSlice {
+	for _, item := range inputs {
 		curBatch = append(curBatch, item)
 		if len(curBatch) >= batchSize {
 			batches = append(batches, curBatch)
@@ -78,20 +78,37 @@ func SliceChunk[T any](rawSlice []T, batchSize int) (batches [][]T) {
 	return batches
 }
 
+// SliceExist checks if the elements exist in the slice
+func SliceExist[T comparable](inputs []T, elements ...T) bool {
+	if len(inputs) == 0 {
+		return false
+	}
+	set := make(map[T]struct{}, len(inputs))
+	for _, v := range inputs {
+		set[v] = struct{}{}
+	}
+	for _, v := range elements {
+		if _, ok := set[v]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
 // SliceUnique removes the duplicated elements in the slice and keep the order
-func SliceUnique[T comparable](arr []T) []T {
-	set := make(map[T]struct{}, len(arr))
+func SliceUnique[T comparable](inputs []T) []T {
+	set := make(map[T]struct{}, len(inputs))
 	j := 0
-	for _, v := range arr {
+	for _, v := range inputs {
 		_, ok := set[v]
 		if ok {
 			continue
 		}
 		set[v] = struct{}{}
-		arr[j] = v
+		inputs[j] = v
 		j++
 	}
-	return arr[:j]
+	return inputs[:j]
 }
 
 // SliceSub returns the elements in inputs but not in subs
