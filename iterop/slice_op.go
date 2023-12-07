@@ -4,9 +4,6 @@ const minBatchSize int = 1
 
 // SliceFilter filters the inputs slice by the filterFn
 func SliceFilter[T any](inputs []T, filterFn func(T) bool) []T {
-	if len(inputs) == 0 {
-		return make([]T, 0)
-	}
 	outputs := make([]T, 0)
 	for _, v := range inputs {
 		if filterFn(v) {
@@ -17,11 +14,8 @@ func SliceFilter[T any](inputs []T, filterFn func(T) bool) []T {
 }
 
 // SliceMap maps the inputs slice by the mapFn
-func SliceMap[T1, T2 any](inputs []T1, mapFn func(T1) T2) []T2 {
-	if len(inputs) == 0 {
-		return make([]T2, 0)
-	}
-	outputs := make([]T2, len(inputs))
+func SliceMap[T, R any](inputs []T, mapFn func(T) R) []R {
+	outputs := make([]R, len(inputs))
 	for i, v := range inputs {
 		outputs[i] = mapFn(v)
 	}
@@ -29,12 +23,9 @@ func SliceMap[T1, T2 any](inputs []T1, mapFn func(T1) T2) []T2 {
 }
 
 // SliceFlatMap flatmaps the inputs slice by the flatmapFn
-func SliceFlatMap[T1, T2 any](inputs []T1, flatmapFn func(input T1, collector func(T2))) []T2 {
-	if len(inputs) == 0 {
-		return make([]T2, 0)
-	}
-	outputs := make([]T2, 0)
-	collector := func(v T2) {
+func SliceFlatMap[T, R any](inputs []T, flatmapFn func(input T, collector func(R))) []R {
+	outputs := make([]R, 0)
+	collector := func(v R) {
 		outputs = append(outputs, v)
 	}
 	for _, v := range inputs {
@@ -45,9 +36,6 @@ func SliceFlatMap[T1, T2 any](inputs []T1, flatmapFn func(input T1, collector fu
 
 // SliceReduce reduces the inputs slice by the reduceFn
 func SliceReduce[T, R any](inputs []T, init R, reduceFn func(R, T) R) R {
-	if len(inputs) == 0 {
-		return init
-	}
 	output := init
 	for _, v := range inputs {
 		output = reduceFn(output, v)
