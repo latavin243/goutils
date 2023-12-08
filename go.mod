@@ -9,8 +9,8 @@ require (
 	github.com/haoel/downsampling v0.0.0-20230421155218-bf6cb5e6ff3c
 	github.com/leekchan/accounting v1.0.0
 	github.com/panjf2000/ants/v2 v2.8.2
+	github.com/spaolacci/murmur3 v1.1.0
 	github.com/stretchr/testify v1.8.4
-	github.com/twmb/murmur3 v1.1.8
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
 	golang.org/x/sync v0.5.0
 	golang.org/x/text v0.14.0
