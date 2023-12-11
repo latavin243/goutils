@@ -18,7 +18,7 @@ go get github.com/latavin243/goutils
 - [x] roundrobin - round-robin balancing
 - [x] stopwatch - a stopwatch to get time duration elapsed
 - [ ] ringbuffer - ring buffer with generics
-- [ ] ringhash - ring hash for consistent hashing
+- [x] ringhash - ring hash for consistent hashing
 - [ ] bus - message bus for pub/sub, producer/consumer
 
 ## utils based on other packages
