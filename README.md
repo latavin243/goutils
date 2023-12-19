@@ -31,7 +31,7 @@ go get github.com/latavin243/goutils
 - [x] requtil - http request utils
 - [x] sampling - a little wrap of downsampling package
 - [x] fileutil - file tools, e.g. absolute path, size, md5, etc
-- [ ] excelutil - excel functions in practice based on qax-os/excelize
+- [x] excelutil - excel functions in practice based on qax-os/excelize
 
 ## todo
 

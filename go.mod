@@ -26,5 +26,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
+	github.com/tealeg/xlsx v1.0.5 // indirect
 	golang.org/x/net v0.17.0 // indirect
 )
