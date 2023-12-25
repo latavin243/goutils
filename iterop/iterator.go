@@ -42,7 +42,9 @@ func (iter *sliceIter[T]) HasNext() bool {
 }
 
 func (iter *sliceIter[T]) Next() (elem T, hasNext bool) {
-	return iter.s[iter.cur], iter.cur < len(iter.s)-1
+	elem, hasNext = iter.s[iter.cur], iter.HasNext()
+	iter.cur++
+	return elem, hasNext
 }
 
 func SliceToIter[T any](s []T) Iterator[T] {
