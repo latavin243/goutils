@@ -50,22 +50,3 @@ func (iter *sliceIter[T]) Next() (elem T, hasNext bool) {
 func SliceToIter[T any](s []T) Iterator[T] {
 	return &sliceIter[T]{s, 0}
 }
-
-// chanIter
-
-type chanIter[T any] struct {
-	ch <-chan T
-}
-
-func (iter *chanIter[T]) HasNext() bool {
-	return len(iter.ch) == 0
-}
-
-func (iter *chanIter[T]) Next() (elem T, hasNext bool) {
-	elem, hasNext = <-iter.ch
-	return elem, hasNext
-}
-
-func ChanToIter[T any](ch <-chan T) Iterator[T] {
-	return &chanIter[T]{ch}
-}
