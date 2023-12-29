@@ -1,8 +1,6 @@
 package iterop
 
-import "sort"
-
-type SortFn[T any] func(lhs, rhs T) bool
+type SortFn[T any] func([]T)
 
 // MapValues takes the values of the map and sort the result (if sortFn is passed)
 func MapValues[K comparable, V any](m map[K]V, sortFn SortFn[V]) []V {
@@ -16,7 +14,7 @@ func MapValues[K comparable, V any](m map[K]V, sortFn SortFn[V]) []V {
 		i++
 	}
 	if sortFn != nil {
-		sort.Slice(outputs, func(i, j int) bool { return sortFn(outputs[i], outputs[j]) })
+		sortFn(outputs)
 	}
 	return outputs
 }
@@ -33,7 +31,7 @@ func MapKeys[K comparable, V any](m map[K]V, sortFn SortFn[K]) []K {
 		i++
 	}
 	if sortFn != nil {
-		sort.Slice(outputs, func(i, j int) bool { return sortFn(outputs[i], outputs[j]) })
+		sortFn(outputs)
 	}
 	return outputs
 }
