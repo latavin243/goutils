@@ -27,8 +27,8 @@ func newXlsxSheet(
 	sheet *xlsx.Sheet, sheetName string, sheetDir SheetDir,
 	titleStyle *xlsx.Style,
 ) Sheet {
-	if sheetDir != SheetDirVertical && sheetDir != SheetDirHorizontal {
-		sheetDir = SheetDirHorizontal
+	if sheetDir != SheetDirTB && sheetDir != SheetDirLR {
+		sheetDir = SheetDirLR
 	}
 	if titleStyle == nil {
 		titleStyle = GetDefaultTitleStyle(true, xlsx.Alignment{
@@ -55,18 +55,18 @@ func (s *XlsxSheet) SetWidths(widths []uint32) {
 
 func (s *XlsxSheet) AddTitle(titles []*Title) {
 	switch s.Direction {
-	case SheetDirHorizontal:
+	case SheetDirLR:
 		s.addTitleRow(titles)
-	case SheetDirVertical:
+	case SheetDirTB:
 		s.addTitleCol(titles)
 	}
 }
 
 func (s *XlsxSheet) AddEntry(cells []*Cell, customStyle *xlsx.Style) {
 	switch s.Direction {
-	case SheetDirHorizontal:
+	case SheetDirLR:
 		s.addDataRow(cells, customStyle)
-	case SheetDirVertical:
+	case SheetDirTB:
 		s.addDataCol(cells, customStyle)
 	}
 }

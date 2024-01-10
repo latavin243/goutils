@@ -10,8 +10,8 @@ const (
 type SheetDir int
 
 const (
-	SheetDirHorizontal SheetDir = iota + 1
-	SheetDirVertical
+	SheetDirTB SheetDir = iota + 1 // top-bottom direction
+	SheetDirLR                     // left-right direction
 )
 
 type Aliment int
