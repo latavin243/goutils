@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"reflect"
 
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v3"
@@ -20,13 +19,11 @@ func registerParser(ft fileType, parser Parser) {
 
 func init() {
 	registerParser(fileTypeJSON, jsonParser)
+	registerParser(fileTypeYAML, yamlParser)
+	registerParser(fileTypeTOML, tomlParser)
 }
 
 func jsonParser(filePath string, target interface{}) error {
-	if err := checkTarget(target); err != nil {
-		return err
-	}
-
 	jsonFile, err := os.ReadFile(filePath)
 	if err != nil {
 		return fmt.Errorf("read config file error, filePath=%s, err=%s", filePath, err)
@@ -39,10 +36,6 @@ func jsonParser(filePath string, target interface{}) error {
 }
 
 func yamlParser(filePath string, target interface{}) error {
-	if err := checkTarget(target); err != nil {
-		return err
-	}
-
 	yamlFile, err := os.ReadFile(filePath)
 	if err != nil {
 		return fmt.Errorf("read config file error, filePath=%s, err=%s", filePath, err)
@@ -55,24 +48,9 @@ func yamlParser(filePath string, target interface{}) error {
 }
 
 func tomlParser(filePath string, target interface{}) error {
-	if err := checkTarget(target); err != nil {
-		return err
-	}
-
 	_, err := toml.DecodeFile(filePath, target)
 	if err != nil {
 		return fmt.Errorf("decode toml file error, filePath=%s, err=%s", filePath, err)
-	}
-	return nil
-}
-
-func checkTarget(input interface{}) error {
-	v := reflect.ValueOf(input)
-	if v.Kind() != reflect.Ptr {
-		return fmt.Errorf("target is not a pointer")
-	}
-	if v.IsNil() {
-		return fmt.Errorf("target is nil")
 	}
 	return nil
 }
