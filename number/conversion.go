@@ -3,7 +3,6 @@ package number
 import (
 	"strconv"
 
-	"github.com/leekchan/accounting"
 	"golang.org/x/exp/constraints"
 )
 
@@ -19,16 +18,6 @@ func IntToString[T constraints.Integer](n T) string {
 
 func FloatToString[T constraints.Float](n T, precision int) string {
 	return strconv.FormatFloat(float64(n), 'f', precision, 64)
-}
-
-func NumToAccountingString[T Num](f T, precision int) string {
-	ac := &accounting.Accounting{
-		Symbol:    "",
-		Precision: precision,
-		Thousand:  ",",
-		Decimal:   ".",
-	}
-	return ac.FormatMoney(f)
 }
 
 // string to number

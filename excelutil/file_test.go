@@ -3,6 +3,7 @@ package excelutil_test
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,7 +18,7 @@ func DullTranslate(key string) string {
 // LR: left-right
 func TestLRExcelFileExport(t *testing.T) {
 	fileName := "test_lr.xlsx"
-	filePath := "/tmp/test_lr.xlsx"
+	filePath := filepath.Join("/tmp", fileName)
 
 	file, err := NewExcelFile(fileName)
 	assert.NoError(t, err)
@@ -56,7 +57,7 @@ func TestLRExcelFileExport(t *testing.T) {
 // TB: top-bottom
 func TestTBExcelFileExport(t *testing.T) {
 	fileName := "test_tb.xlsx"
-	filePath := "/tmp/test_tb.xlsx"
+	filePath := filepath.Join("/tmp", fileName)
 
 	file, err := NewExcelFile(fileName)
 	assert.NoError(t, err)

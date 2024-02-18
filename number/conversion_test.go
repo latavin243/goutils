@@ -8,19 +8,55 @@ import (
 	"github.com/latavin243/goutils/number"
 )
 
-func TestConversion(t *testing.T) {
-	assert.Equal(t, "123", number.IntToString(123))
-	assert.Equal(t, "123.46", number.FloatToString(123.456, 2))
-	assert.Equal(t, "1,234.57", number.NumToAccountingString(1234.567, 2))
-	assert.Equal(t, "1,234.00", number.NumToAccountingString(1234, 2))
-	{
-		res, err := number.StringToInt[int64]("123")
-		assert.NoError(t, err)
-		assert.Equal(t, int64(123), res)
+func TestIntToString(t *testing.T) {
+	for _, tc := range []struct {
+		input    int
+		expected string
+	}{
+		{123, "123"},
+		{-123, "-123"},
+	} {
+		assert.Equal(t, tc.expected, number.IntToString(tc.input))
 	}
-	{
-		res, err := number.StringToFloat[float64]("123.45")
+}
+
+func TestFloatToString(t *testing.T) {
+	for _, tc := range []struct {
+		input    float64
+		decimals int
+		expected string
+	}{
+		{123.456, 2, "123.46"},
+		{-123.456, 1, "-123.5"},
+	} {
+		assert.Equal(t, tc.expected, number.FloatToString(tc.input, tc.decimals))
+	}
+}
+
+func TestStringToInt(t *testing.T) {
+	for _, tc := range []struct {
+		input    string
+		expected int64
+	}{
+		{"123", 123},
+		{"-123", -123},
+	} {
+		res, err := number.StringToInt[int64](tc.input)
 		assert.NoError(t, err)
-		assert.Equal(t, 123.45, res)
+		assert.Equal(t, tc.expected, res)
+	}
+}
+
+func TestStringToFloat(t *testing.T) {
+	for _, tc := range []struct {
+		input    string
+		expected float64
+	}{
+		{"123.45", 123.45},
+		{"-123.45", -123.45},
+	} {
+		res, err := number.StringToFloat[float64](tc.input)
+		assert.NoError(t, err)
+		assert.Equal(t, tc.expected, res)
 	}
 }
