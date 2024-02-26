@@ -5,13 +5,41 @@ import (
 	"reflect"
 )
 
-// StructFoldSum folds all items and add to res
-// ONLY works for struct with all demanded fields of number type
-// put tag `fold:"skip"` on fields definition to skip fold (e.g. skip string fields)
+const (
+	// common fold process
+	foldTagSkip  = "skip" // default skip
+	foldTagFirst = "first"
+
+	// fold process for number
+	foldTagNumZero = "num/zero"
+	foldTagNumSum  = "num/sum"
+
+	// fold process for string
+	foldTagStrEmpty    = "str/empty"
+	foldTagStrCatenate = "str/cat"
+	foldTagStrJoin     = "str/join" // e.g. "str/join/-" to join with "-"
+)
+
+// StructFold folds all items
 // check unittest for example
-func StructFoldSum(res interface{}, items ...interface{}) (err error) {
+func StructFold(res interface{}, items ...interface{}) (err error) {
+	if !IsPtrToStruct(res) {
+		return fmt.Errorf("res should be pointer to struct")
+	}
+	// TODO check res tag
+	if err = checkStructFoldTag(res); err != nil {
+		return err
+	}
+
 	for _, item := range items {
-		err = structFoldAdd(res, item)
+		if !IsPtrToStruct(item) {
+			return fmt.Errorf("res and item should be pointer to struct")
+		}
+		if !SameType(res, item) {
+			return fmt.Errorf("res and item should be the same type, res=%T, item=%T", res, item)
+		}
+
+		err = structFold(res, item)
 		if err != nil {
 			return err
 		}
@@ -19,56 +47,59 @@ func StructFoldSum(res interface{}, items ...interface{}) (err error) {
 	return nil
 }
 
-func structFoldAdd(res interface{}, item interface{}) (err error) {
-	if !SameType(res, item) {
-		return fmt.Errorf("res and item should be the same type, res=%T, item=%T", res, item)
+func checkStructFoldTag(input interface{}) error {
+	v := reflect.ValueOf(input).Elem()
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Type().Field(i)
+		tag := field.Tag.Get("fold")
+		switch tag {
+		case foldTagNumZero, foldTagNumSum:
+			if !isNumberKind(field.Type.Kind()) {
+				return fmt.Errorf("field %s should be number type", field.Type.Name())
+			}
+		case foldTagStrEmpty, foldTagStrCatenate, foldTagStrJoin:
+			if !isStringKind(field.Type.Kind()) {
+				return fmt.Errorf("field %s should be string type", field.Type.Name())
+			}
+		default:
+			// do nothing
+		}
 	}
+	return nil
+}
 
-	resValue := reflect.ValueOf(res)
-	itemValue := reflect.ValueOf(item)
-	if resValue.Kind() != reflect.Ptr || itemValue.Kind() != reflect.Ptr {
-		return fmt.Errorf("res and item should be pointer")
-	}
-
-	resValue = resValue.Elem()
-	itemValue = itemValue.Elem()
-	if resValue.Kind() != reflect.Struct || itemValue.Kind() != reflect.Struct {
-		return fmt.Errorf("res and item should be pointer to struct")
-	}
-
+func structFold(res interface{}, item interface{}) (err error) {
+	resValue := reflect.ValueOf(res).Elem()
+	itemValue := reflect.ValueOf(item).Elem()
 Loop:
 	for i := 0; i < resValue.NumField(); i++ {
 		resField := resValue.Field(i)
 		itemField := itemValue.Field(i)
 
 		switch resValue.Type().Field(i).Tag.Get("fold") {
-		case "skip", "first":
+		case foldTagSkip, foldTagFirst:
 			continue Loop
-		case "zero":
+		case foldTagNumZero:
 			resField.Set(reflect.Zero(resField.Type()))
 			continue Loop
+		case foldTagNumSum:
+			sumRes, err := foldNumSum(resField, itemField)
+			if err != nil {
+				return err
+			}
+			resField.Set(sumRes.Convert(resField.Type()))
 		default:
-			// do nothing
+			continue Loop
 		}
-
-		if !isNumberValue(resField) || !isNumberValue(itemField) {
-			return fmt.Errorf("res and item should be pointer to struct of numbers, resFieldKind=%+v, itemFieldKind=%+v", resField.Kind(), itemField.Kind())
-		}
-
-		addRes, err := numberValueAdd(resField, itemField)
-		if err != nil {
-			return err
-		}
-		resField.Set(addRes.Convert(resField.Type()))
 	}
 	return nil
 }
 
-func numberValueAdd(lhs, rhs reflect.Value) (reflect.Value, error) {
+func foldNumSum(lhs, rhs reflect.Value) (reflect.Value, error) {
 	if !SameType(lhs, rhs) {
 		return reflect.Value{}, fmt.Errorf("inputs should be the same type, lhs=%T, rhs=%T", lhs, rhs)
 	}
-	if !isNumberValue(lhs) || !isNumberValue(rhs) {
+	if !isNumberKind(lhs.Kind()) || !isNumberKind(rhs.Kind()) {
 		return reflect.Value{}, fmt.Errorf("inputs should be numbers, lhs=%T, rhs=%T", lhs, rhs)
 	}
 

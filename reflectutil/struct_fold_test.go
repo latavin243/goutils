@@ -11,20 +11,34 @@ import (
 
 func TestStructFoldAdd(t *testing.T) {
 	type MyStruct struct {
-		A int
-		B float64
-		C int `fold:"skip"`
-		D int `fold:"zero"`
-		E int `fold:"zero"`
-		F int `fold:"first"`
+		Name string `fold:"first"`
+
+		FloatSum float64 `fold:"num/sum"`
+		IntSum   int     `fold:"num/sum"`
+		IntSkip  int     `fold:"skip"`
+		IntZero1 int     `fold:"num/zero"`
+		IntZero2 int     `fold:"num/zero"`
+		IntFirst int     `fold:"first"`
 	}
 
-	res := &MyStruct{B: 1.1, C: 10, D: 20, E: 0, F: 10}
-	item1 := &MyStruct{A: 1, B: 2.2, C: 3, D: 10, F: 20}
-	item2 := &MyStruct{A: 3, B: 4.3, C: 5, E: 10}
-	expected := &MyStruct{A: 4, B: 7.6, C: 10, D: 0, E: 0, F: 10}
+	res := &MyStruct{
+		Name: "name", FloatSum: 1.1,
+		IntSkip: 10, IntZero1: 20, IntZero2: 0, IntFirst: 10,
+	}
+	item1 := &MyStruct{
+		FloatSum: 2.2,
+		IntSum:   1, IntSkip: 3, IntZero1: 10, IntFirst: 20,
+	}
+	item2 := &MyStruct{
+		FloatSum: 4.3,
+		IntSum:   3, IntSkip: 5, IntZero2: 10,
+	}
+	expected := &MyStruct{
+		Name: "name", FloatSum: 7.6,
+		IntSum: 4, IntSkip: 10, IntZero1: 0, IntZero2: 0, IntFirst: 10,
+	}
 
-	err := reflectutil.StructFoldSum(res, item1, item2)
+	err := reflectutil.StructFold(res, item1, item2)
 	assert.NoError(t, err)
 	assert.Equal(t, expected, res)
 	fmt.Printf("res=%+v\n", res)

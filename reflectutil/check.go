@@ -25,7 +25,11 @@ func IsNil(input interface{}) bool {
 }
 
 func IsNumber(input interface{}) bool {
-	switch reflect.TypeOf(input).Kind() {
+	return isNumberKind(reflect.TypeOf(input).Kind())
+}
+
+func isNumberKind(input reflect.Kind) bool {
+	switch input {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
 		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
 		reflect.Float32, reflect.Float64:
@@ -35,15 +39,8 @@ func IsNumber(input interface{}) bool {
 	}
 }
 
-func isNumberValue(input reflect.Value) bool {
-	switch input.Kind() {
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
-		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
-		reflect.Float32, reflect.Float64:
-		return true
-	default:
-		return false
-	}
+func isStringKind(input reflect.Kind) bool {
+	return input == reflect.String
 }
 
 func SameType(ref interface{}, others ...interface{}) bool {
@@ -53,4 +50,9 @@ func SameType(ref interface{}, others ...interface{}) bool {
 		}
 	}
 	return true
+}
+
+func IsPtrToStruct(input interface{}) bool {
+	v := reflect.ValueOf(input)
+	return v.Kind() == reflect.Ptr && v.Elem().Kind() == reflect.Struct
 }
