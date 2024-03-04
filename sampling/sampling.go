@@ -12,22 +12,22 @@ type Sampler interface {
 	Sample(points []Point, sampleNum uint32) ([]Point, error)
 }
 
-type LTDSampleCollector struct{}
+type LTDSampler struct{}
 
-func NewLTDSampleCollector() Sampler {
-	return &LTDSampleCollector{}
+func NewLTDSampler() Sampler {
+	return &LTDSampler{}
 }
 
-func (c *LTDSampleCollector) Sample(points []Point, sampleNum uint32) (samples []Point, err error) {
+func (c *LTDSampler) Sample(points []Point, sampleNum uint32) (samples []Point, err error) {
 	return downsampling.LTD(points, int(sampleNum)), nil
 }
 
-type LTTBSampleCollector struct{}
+type LTTBSampler struct{}
 
-func NewLTTBSampleCollector() Sampler {
-	return &LTTBSampleCollector{}
+func NewLTTBSampler() Sampler {
+	return &LTTBSampler{}
 }
 
-func (c *LTTBSampleCollector) Sample(points []Point, sampleNum uint32) (samples []Point, err error) {
+func (c *LTTBSampler) Sample(points []Point, sampleNum uint32) (samples []Point, err error) {
 	return downsampling.LTTB(points, int(sampleNum)), nil
 }
