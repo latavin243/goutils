@@ -66,8 +66,8 @@ func SliceChunk[T any](inputs []T, batchSize int) (batches [][]T) {
 	return batches
 }
 
-// SliceExist checks if the elements exist in the slice
-func SliceExist[T comparable](inputs []T, elements ...T) bool {
+// SliceContains checks if the elements exist in the slice
+func SliceContains[T comparable](inputs []T, elements []T) bool {
 	if len(inputs) == 0 {
 		return false
 	}
