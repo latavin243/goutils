@@ -19,7 +19,7 @@ go get github.com/latavin243/goutils
 - [x] stopwatch - a stopwatch to get time duration elapsed
 - [x] ringbuffer - ring buffer with generics
 - [x] ringhash - ring hash for consistent hashing
-- [ ] bus - message bus for pub/sub, producer/consumer
+- [x] eventbus - message event bus for pub/sub, producer/consumer
 
 ## utils based on other packages
 
