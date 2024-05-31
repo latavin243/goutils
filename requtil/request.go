@@ -25,7 +25,7 @@ const (
 	TypeText       = "text"
 	TypeMultipart  = "multipart"
 
-	HttpStatusTooEarlyErr = "Client.Timeout exceeded while awaiting headers"
+	errHttpStatusTooEarly = "Client.Timeout exceeded while awaiting headers"
 )
 
 type Req struct {
@@ -44,12 +44,6 @@ type Req struct {
 	TimeOut     time.Duration
 	RateLimiter *rate.Limiter
 	RespCheck   func(content []byte) (err error)
-}
-
-type Logger interface {
-	Infof(format string, args ...interface{})
-	Errorf(format string, args ...interface{})
-	Warningf(format string, args ...interface{})
 }
 
 type RetrySettings struct {

@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	logger           Logger
-	loggerNotInitErr = errors.New("logger not initialized")
+	logger           Logger = &DullLogger{}
+	errLoggerNotInit        = errors.New("logger not initialized")
 )
 
 func Init(loggerIns Logger) {
@@ -32,7 +32,7 @@ func NewLongConnClient(timeout time.Duration) *resty.Client {
 		SetTransport(NewLongConnTransport()).
 		SetPreRequestHook(func(c *resty.Client, r *http.Request) error {
 			if logger == nil {
-				return loggerNotInitErr
+				return errLoggerNotInit
 			}
 			cmd, _ := http2curl.GetCurlCommand(r)
 			logger.Infof("request curl command: %s", cmd.String())
@@ -40,11 +40,28 @@ func NewLongConnClient(timeout time.Duration) *resty.Client {
 		})
 }
 
-func LongConnRequest(
+func NewLongConnTransport() *http.Transport {
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 60 * time.Second,
+	}
+	return &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		DialContext:           dialer.DialContext,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          500,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		MaxIdleConnsPerHost:   runtime.GOMAXPROCS(0) + 1,
+	}
+}
+
+func RequestLongConn(
 	client *resty.Client, req *Req, retrySettings *RetrySettings,
 ) (httpCode int, resp []byte, err error) {
 	if logger == nil {
-		return httpCode, nil, loggerNotInitErr
+		return httpCode, nil, errLoggerNotInit
 	}
 	if req.ApiName == "" {
 		return httpCode, nil, errors.New("api name not set")
@@ -58,16 +75,16 @@ func LongConnRequest(
 	}
 
 	requestFunc := func() error {
-		var err error
+		var locErr error
 		if req.RateLimiter != nil {
-			err = req.RateLimiter.Wait(context.Background())
-			if err != nil {
-				logger.Warningf("rate limiter wait error, err=%s", err)
+			locErr = req.RateLimiter.Wait(context.Background())
+			if locErr != nil {
+				logger.Warningf("rate limiter wait error, err=%s", locErr)
 				// won't return
 			}
 		}
-		httpCode, resp, err = longConnRequest(client, req)
-		return err
+		httpCode, resp, locErr = requestLongConn(client, req)
+		return locErr
 	}
 
 	err = fnwrap.New(requestFunc).
@@ -80,7 +97,7 @@ func LongConnRequest(
 	return httpCode, resp, err
 }
 
-func longConnRequest(
+func requestLongConn(
 	client *resty.Client, req *Req,
 ) (statusCode int, content []byte, err error) {
 	if req.TimeOut < 3*time.Second {
@@ -112,7 +129,7 @@ func longConnRequest(
 	if err != nil {
 		statusCode = http.StatusInternalServerError
 		logger.Errorf("resty request err, err=%s", err)
-		if strings.Contains(err.Error(), HttpStatusTooEarlyErr) {
+		if strings.Contains(err.Error(), errHttpStatusTooEarly) {
 			statusCode = http.StatusTooEarly
 		}
 		return statusCode, nil, err
@@ -134,21 +151,4 @@ func longConnRequest(
 	}
 
 	return statusCode, respContent, nil
-}
-
-func NewLongConnTransport() *http.Transport {
-	dialer := &net.Dialer{
-		Timeout:   30 * time.Second,
-		KeepAlive: 60 * time.Second,
-	}
-	return &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
-		DialContext:           dialer.DialContext,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          500,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		MaxIdleConnsPerHost:   runtime.GOMAXPROCS(0) + 1,
-	}
 }
