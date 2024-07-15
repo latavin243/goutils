@@ -7,6 +7,7 @@ const (
 	fileTypeTOML
 	fileTypeYAML
 	fileTypeJSON
+	fileTypeCSV
 )
 
 func (t fileType) String() string {
@@ -17,6 +18,8 @@ func (t fileType) String() string {
 		return "YAML"
 	case fileTypeJSON:
 		return "JSON"
+	case fileTypeCSV:
+		return "CSV"
 	default:
 		return "Invalid"
 	}
@@ -27,4 +30,5 @@ var fileExtTypeMap = map[string]fileType{
 	".yaml": fileTypeYAML,
 	".yml":  fileTypeYAML,
 	".json": fileTypeJSON,
+	".csv":  fileTypeCSV,
 }
