@@ -10,23 +10,39 @@ import (
 	"strings"
 	"time"
 
-	"github.com/avast/retry-go"
 	"github.com/go-resty/resty/v2"
 	"moul.io/http2curl"
-
-	"github.com/latavin243/goutils/fnwrap"
 )
+
+type RestyRetry struct {
+	Attempts   uint
+	Wait       time.Duration
+	MaxWait    time.Duration
+	RetryAfter resty.RetryAfterFunc
+}
 
 var (
 	logger           Logger = &DullLogger{}
 	errLoggerNotInit        = errors.New("logger not initialized")
+	defaultRetry            = &RestyRetry{
+		Attempts: 2,
+		Wait:     1 * time.Second,
+		MaxWait:  3 * time.Second,
+		RetryAfter: func(c *resty.Client, resp *resty.Response) (time.Duration, error) {
+			logger.Warningf("url=%+v, retryCount=%d, err=%+v", c.BaseURL, c.RetryCount, resp.Error())
+			return 0, nil // default backoff
+		},
+	}
 )
 
 func Init(loggerIns Logger) {
 	logger = loggerIns
 }
 
-func NewLongConnClient(timeout time.Duration) *resty.Client {
+func NewLongConnClient(timeout time.Duration, retry *RestyRetry) *resty.Client {
+	if retry == nil {
+		retry = defaultRetry
+	}
 	return resty.New().
 		SetTimeout(timeout).
 		SetTransport(NewLongConnTransport()).
@@ -37,7 +53,11 @@ func NewLongConnClient(timeout time.Duration) *resty.Client {
 			cmd, _ := http2curl.GetCurlCommand(r)
 			logger.Infof("request curl command: %s", cmd.String())
 			return nil
-		})
+		}).
+		SetRetryCount(int(retry.Attempts)).
+		SetRetryWaitTime(retry.Wait).
+		SetRetryMaxWaitTime(retry.MaxWait).
+		SetRetryAfter(retry.RetryAfter)
 }
 
 func NewLongConnTransport() *http.Transport {
@@ -58,7 +78,7 @@ func NewLongConnTransport() *http.Transport {
 }
 
 func RequestLongConn(
-	client *resty.Client, req *Req, retrySettings *RetrySettings,
+	client *resty.Client, req *Req,
 ) (httpCode int, resp []byte, err error) {
 	if logger == nil {
 		return httpCode, nil, errLoggerNotInit
@@ -66,35 +86,15 @@ func RequestLongConn(
 	if req.ApiName == "" {
 		return httpCode, nil, errors.New("api name not set")
 	}
-	if retrySettings == nil {
-		retrySettings = &RetrySettings{
-			Attempts:        2,
-			Delay:           1 * time.Second,
-			OnRetryCallback: func(n uint, err error) { logger.Warningf("apiName=%+v, retry=%d, err=%s", req.ApiName, n, err) },
+
+	if req.RateLimiter != nil {
+		locErr := req.RateLimiter.Wait(context.Background())
+		if locErr != nil {
+			logger.Warningf("rate limiter wait error, err=%s", locErr)
+			// won't return
 		}
 	}
-
-	requestFunc := func() error {
-		var locErr error
-		if req.RateLimiter != nil {
-			locErr = req.RateLimiter.Wait(context.Background())
-			if locErr != nil {
-				logger.Warningf("rate limiter wait error, err=%s", locErr)
-				// won't return
-			}
-		}
-		httpCode, resp, locErr = requestLongConn(client, req)
-		return locErr
-	}
-
-	err = fnwrap.New(requestFunc).
-		WithRetry(
-			retry.Attempts(retrySettings.Attempts),
-			retry.Delay(retrySettings.Delay),
-			retry.OnRetry(retrySettings.OnRetryCallback),
-		).
-		Do()
-	return httpCode, resp, err
+	return requestLongConn(client, req)
 }
 
 func requestLongConn(

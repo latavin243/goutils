@@ -45,9 +45,3 @@ type Req struct {
 	RateLimiter *rate.Limiter
 	RespCheck   func(content []byte) (err error)
 }
-
-type RetrySettings struct {
-	Attempts        uint
-	Delay           time.Duration
-	OnRetryCallback func(attemptNum uint, err error)
-}
