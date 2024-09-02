@@ -1,7 +1,6 @@
 package roundrobin_test
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
