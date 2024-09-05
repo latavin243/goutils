@@ -27,5 +27,7 @@ require (
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/tealeg/xlsx v1.0.5 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
 )
