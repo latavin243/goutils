@@ -14,9 +14,9 @@ func TestNumToAccountingString(t *testing.T) {
 		decimals int
 		expected string
 	}{
-		{1234.567, 2, "1,234.57"},
-		{1234, 2, "1,234.00"},
+		{1234.567, 2, "$1,234.57"},
+		{1234, 2, "$1,234.00"},
 	} {
-		assert.Equal(t, tc.expected, number.NumToAccountingString(tc.input, tc.decimals))
+		assert.Equal(t, tc.expected, number.NumToAccountingString(tc.input, tc.decimals, "$"))
 	}
 }

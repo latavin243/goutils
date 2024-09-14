@@ -25,7 +25,8 @@ func FloatToString[T constraints.Float](n T, precision int) string {
 func StringToInt[T constraints.Integer](s string) (T, error) {
 	res, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
-		return 0, err
+		var zero T
+		return zero, err
 	}
 	return T(res), nil
 }
@@ -33,7 +34,8 @@ func StringToInt[T constraints.Integer](s string) (T, error) {
 func StringToFloat[T constraints.Float](s string) (T, error) {
 	n, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		return 0, err
+		var zero T
+		return zero, err
 	}
 	return T(n), nil
 }

@@ -4,7 +4,7 @@ import "golang.org/x/exp/constraints"
 
 func DecimalDigits[T constraints.Integer](num T) int {
 	if num == 0 {
-		return 0
+		return 1
 	}
 	if num < 0 {
 		num = -num
