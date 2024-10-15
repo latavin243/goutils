@@ -23,7 +23,7 @@ const (
 // StructFold folds all items
 // check unittest for example
 func StructFold(res interface{}, items ...interface{}) (err error) {
-	if !IsPtrToStruct(res) {
+	if !IsStructPtr(res) {
 		return fmt.Errorf("res should be pointer to struct")
 	}
 	// TODO check res tag
@@ -32,7 +32,7 @@ func StructFold(res interface{}, items ...interface{}) (err error) {
 	}
 
 	for _, item := range items {
-		if !IsPtrToStruct(item) {
+		if !IsStructPtr(item) {
 			return fmt.Errorf("res and item should be pointer to struct")
 		}
 		if !SameType(res, item) {

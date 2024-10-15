@@ -52,7 +52,7 @@ func SameType(ref interface{}, others ...interface{}) bool {
 	return true
 }
 
-func IsPtrToStruct(input interface{}) bool {
+func IsStructPtr(input interface{}) bool {
 	v := reflect.ValueOf(input)
 	return v.Kind() == reflect.Ptr && v.Elem().Kind() == reflect.Struct
 }
